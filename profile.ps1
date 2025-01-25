@@ -117,66 +117,57 @@ if (!(Test-Administrator)) {
 	Start-Process PowerShell -Verb RunAsUser
 }
 
+# Set the default prompt to the Oh-My-Posh prompt
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\blueish.omp.json" | Invoke-Expression
 
-<#
-The script first checks if the environment variable `$TERM_PROGRAM` is equal to 'VSCode' or if the environment variable `$WT_SESSION` is set. If either of these conditions is true, the script sets the value of the `$ansiesc` variable to the escape character used for ANSI escape sequences in the specific environment.
-#>
-if ($env:TERM_PROGRAM -eq 'VSCode' -or $env:WT_SESSION) {
-	if ($psedition -eq 'core') {
-		$ansiesc = "`e"
-	}
- else {
-		$ansiesc = [char]0x1b
-	}
 
-	# Most of this came from the Sample PSReadLineProfile.ps1 at GitHub, Microsoft, YouTube and Google searching.
-	# The $PSROptions = @{} has helper in booting my Profile quicker.
-	$PSReadLineOptions = @{
-		ContinuationPrompt            = ' '
-		Colors                        = @{
-			Command            = "$($ansiesc)[93m"
-			Comment            = "$($ansiesc)[32m"
-			ContinuationPrompt = "$($ansiesc)[37m"
-			Default            = "$($ansiesc)[37m"
-			Emphasis           = "$($ansiesc)[96m"
-			Error              = "$($ansiesc)[31m"
-			Keyword            = "$($ansiesc)[35m"
-			Member             = "$($ansiesc)[96m"
-			Number             = "$($ansiesc)[35m"
-			Operator           = "$($ansiesc)[37m"
-			Parameter          = "$($ansiesc)[37m"
-			Selection          = "$($ansiesc)[37;46m"
-			String             = "$($ansiesc)[33m"
-			Type               = "$($ansiesc)[34m"
-			Variable           = "$($ansiesc)[96m"
+# Most of this came from the Sample PSReadLineProfile.ps1 at GitHub, Microsoft, YouTube and Google searching.
+# The $PSROptions = @{} has helper in booting my Profile quicker.
+$PSReadLineOptions = @{
+	ContinuationPrompt            = ' '
+	Colors                        = @{
+		Command            = $PSStyle.Foreground.BrightYellow
+		Comment            = $PSStyle.Foreground.BrightGreen
+		ContinuationPrompt = $PSStyle.Foreground.BrightWhite
+		Default            = $PSStyle.Foreground.BrightWhite
+		Emphasis           = $PSStyle.Foreground.Cyan
+		Error              = $PSStyle.Foreground.Red
+		Keyword            = $PSStyle.Foreground.Magenta
+		Member             = $PSStyle.Foreground.Cyan
+		Number             = $PSStyle.Foreground.Magenta
+		Operator           = $PSStyle.Foreground.White
+		Parameter          = $PSStyle.Foreground.White
+		Selection          = $PSStyle.Foreground.White + $PSStyle.Background.Cyan
+		String             = $PSStyle.Foreground.Yellow
+		Type               = $PSStyle.Foreground.Blue
+		Variable           = $PSStyle.Foreground.Cyan
+	}
+	PredictionSource              = 'HistoryandPlugin'
+	PredictionViewStyle           = 'ListView'
+	EditMode                      = 'Windows'
+	# PredictionViewCommand         = "Get-PSReadLinePrediction"
+	HistorySaveStyle              = 'SaveIncrementally'
+	# PredictionSourceOptions       = @{
+	#	Provider = "PSReadLinePredictionProvider"
+	# }
+	HistoryNoDuplicates           = $true
+	HistorySearchCursorMovesToEnd = $true
+	ShowToolTips                  = $true
+
+	MaximumHistoryCount           = 4000
+	BellStyle                     = 'Audible'
+	DingTone                      = 1234
+	DingDuration                  = 100
+	AddToHistoryHandler           = {
+		param($line)
+		if ($line -match '^\s*#') {
+			return
 		}
-		PredictionSource              = "HistoryandPlugin"
-		PredictionViewStyle           = "ListView"
-		EditMode                      = "Windows"
-		# PredictionViewCommand         = "Get-PSReadLinePrediction"
-		HistorySaveStyle              = "SaveIncrementally"
-		# PredictionSourceOptions       = @{
-		#	Provider = "PSReadLinePredictionProvider"
-		# }
-		HistoryNoDuplicates           = $true
-		HistorySearchCursorMovesToEnd = $true
-		ShowToolTips                  = $true
-
-		MaximumHistoryCount           = 4000
-		BellStyle                     = "Audible"
-		DingTone                      = 1234
-		DingDuration                  = 100
-		AddToHistoryHandler           = {
-			param($line)
-			if ($line -match '^\s*#') {
-				return
-			}
-			$line
-		}
-
+		$line
 	}
+
 }
+
 
 Set-PSReadLineOption @PSReadLineOptions
 # Search for the previous item in the history that starts with the current input - like PreviousHistory if the input is empty.
@@ -205,8 +196,7 @@ Set-PSReadLineKeyHandler -Key F7 `
 				$line = $line.Substring(0, $line.Length - 1)
 				$lines = if ($lines) {
 					"$lines`n$line"
-				}
-				else {
+				} else {
 					$line
 				}
 				continue
@@ -235,11 +225,11 @@ Set-PSReadLineKeyHandler -Key F7 `
 # This is an example of a macro that you might use to execute a command.
 # This will add the command to history.
 Set-PSReadLineKeyHandler -Key Ctrl+b `
-	-BriefDescription "BuildCurrentDirectory" `
-	-LongDescription "Build the current directory" `
+	-BriefDescription 'BuildCurrentDirectory' `
+	-LongDescription 'Build the current directory' `
 	-ScriptBlock {
 	[Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
-	[Microsoft.PowerShell.PSConsoleReadLine]::Insert("msbuild")
+	[Microsoft.PowerShell.PSConsoleReadLine]::Insert('msbuild')
 	[Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
 }
 
@@ -270,7 +260,7 @@ Set-PSReadLineKeyHandler -Key Alt+F -Function SelectShellForwardWord
 
 Set-PSReadLineKeyHandler -Key '"', "'" `
 	-BriefDescription SmartInsertQuote `
-	-LongDescription "Insert paired quotes if not already on a quote" `
+	-LongDescription 'Insert paired quotes if not already on a quote' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -337,8 +327,7 @@ Set-PSReadLineKeyHandler -Key '"', "'" `
 		if ($line[0..$cursor].Where{ $_ -eq $quote }.Count % 2 -eq 1) {
 			# Odd number of quotes before the cursor, insert a single quote
 			[Microsoft.PowerShell.PSConsoleReadLine]::Insert($quote)
-		}
-		else {
+		} else {
 			# Insert matching quotes, move cursor to be in between the quotes
 			[Microsoft.PowerShell.PSConsoleReadLine]::Insert("$quote$quote")
 			[Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($cursor + 1)
@@ -364,7 +353,7 @@ Set-PSReadLineKeyHandler -Key '"', "'" `
 
 Set-PSReadLineKeyHandler -Key '(', '{', '[' `
 	-BriefDescription InsertPairedBraces `
-	-LongDescription "Insert matching braces" `
+	-LongDescription 'Insert matching braces' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -392,8 +381,7 @@ Set-PSReadLineKeyHandler -Key '(', '{', '[' `
 		# Text is selected, wrap it in brackets
 		[Microsoft.PowerShell.PSConsoleReadLine]::Replace($selectionStart, $selectionLength, $key.KeyChar + $line.SubString($selectionStart, $selectionLength) + $closeChar)
 		[Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($selectionStart + $selectionLength + 2)
-	}
- else {
+	} else {
 		# No text is selected, insert a pair
 		[Microsoft.PowerShell.PSConsoleReadLine]::Insert("$($key.KeyChar)$closeChar")
 		[Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($cursor + 1)
@@ -402,7 +390,7 @@ Set-PSReadLineKeyHandler -Key '(', '{', '[' `
 
 Set-PSReadLineKeyHandler -Key ')', ']', '}' `
 	-BriefDescription SmartCloseBraces `
-	-LongDescription "Insert closing brace or skip" `
+	-LongDescription 'Insert closing brace or skip' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -412,15 +400,14 @@ Set-PSReadLineKeyHandler -Key ')', ']', '}' `
 
 	if ($line[$cursor] -eq $key.KeyChar) {
 		[Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($cursor + 1)
-	}
-	else {
+	} else {
 		[Microsoft.PowerShell.PSConsoleReadLine]::Insert("$($key.KeyChar)")
 	}
 }
 
 Set-PSReadLineKeyHandler -Key Backspace `
 	-BriefDescription SmartBackspace `
-	-LongDescription "Delete previous character or matching quotes/parens/braces" `
+	-LongDescription 'Delete previous character or matching quotes/parens/braces' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -452,8 +439,7 @@ Set-PSReadLineKeyHandler -Key Backspace `
 
 		if ($toMatch -ne $null -and $line[$cursor - 1] -eq $toMatch) {
 			[Microsoft.PowerShell.PSConsoleReadLine]::Delete($cursor - 1, 2)
-		}
-		else {
+		} else {
 			[Microsoft.PowerShell.PSConsoleReadLine]::BackwardDeleteChar($key, $arg)
 		}
 	}
@@ -467,7 +453,7 @@ Set-PSReadLineKeyHandler -Key Backspace `
 # undo stack is reset - though redo will still reconstruct the command line.
 Set-PSReadLineKeyHandler -Key Alt+w `
 	-BriefDescription SaveInHistory `
-	-LongDescription "Save current line in history but do not execute" `
+	-LongDescription 'Save current line in history but do not execute' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -481,7 +467,7 @@ Set-PSReadLineKeyHandler -Key Alt+w `
 # Insert text from the clipboard as a here string
 Set-PSReadLineKeyHandler -Key Ctrl+V `
 	-BriefDescription PasteAsHereString `
-	-LongDescription "Paste the clipboard text as a here string" `
+	-LongDescription 'Paste the clipboard text as a here string' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -490,8 +476,7 @@ Set-PSReadLineKeyHandler -Key Ctrl+V `
 		# Get clipboard text - remove trailing spaces, convert \r\n to \n, and remove the final \n.
 		$text = ([System.Windows.Clipboard]::GetText() -replace "\p{Zs}*`r?`n", "`n").TrimEnd()
 		[Microsoft.PowerShell.PSConsoleReadLine]::Insert("@'`n$text`n'@")
-	}
-	else {
+	} else {
 		[Microsoft.PowerShell.PSConsoleReadLine]::Ding()
 	}
 }
@@ -501,7 +486,7 @@ Set-PSReadLineKeyHandler -Key Ctrl+V `
 # or if nothing is selected, the whole line.
 Set-PSReadLineKeyHandler -Key 'Alt+(' `
 	-BriefDescription ParenthesizeSelection `
-	-LongDescription "Put parenthesis around the selection or entire line and move the cursor to after the closing parenthesis" `
+	-LongDescription 'Put parenthesis around the selection or entire line and move the cursor to after the closing parenthesis' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -515,8 +500,7 @@ Set-PSReadLineKeyHandler -Key 'Alt+(' `
 	if ($selectionStart -ne -1) {
 		[Microsoft.PowerShell.PSConsoleReadLine]::Replace($selectionStart, $selectionLength, '(' + $line.SubString($selectionStart, $selectionLength) + ')')
 		[Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($selectionStart + $selectionLength + 2)
-	}
-	else {
+	} else {
 		[Microsoft.PowerShell.PSConsoleReadLine]::Replace(0, $line.Length, '(' + $line + ')')
 		[Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
 	}
@@ -527,7 +511,7 @@ Set-PSReadLineKeyHandler -Key 'Alt+(' `
 # no quotes each time it is invoked.
 Set-PSReadLineKeyHandler -Key "Alt+'" `
 	-BriefDescription ToggleQuoteArgument `
-	-LongDescription "Toggle quotes on the argument under the cursor" `
+	-LongDescription 'Toggle quotes on the argument under the cursor' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -561,12 +545,10 @@ Set-PSReadLineKeyHandler -Key "Alt+'" `
 		if ($tokenText[0] -eq '"' -and $tokenText[-1] -eq '"') {
 			# Switch to no quotes
 			$replacement = $tokenText.Substring(1, $tokenText.Length - 2)
-		}
-		elseif ($tokenText[0] -eq "'" -and $tokenText[-1] -eq "'") {
+		} elseif ($tokenText[0] -eq "'" -and $tokenText[-1] -eq "'") {
 			# Switch to double quotes
 			$replacement = '"' + $tokenText.Substring(1, $tokenText.Length - 2) + '"'
-		}
-		else {
+		} else {
 			# Add single quotes
 			$replacement = "'" + $tokenText + "'"
 		}
@@ -579,9 +561,9 @@ Set-PSReadLineKeyHandler -Key "Alt+'" `
 }
 
 # This example will replace any aliases on the command line with the resolved commands.
-Set-PSReadLineKeyHandler -Key "Alt+%" `
+Set-PSReadLineKeyHandler -Key 'Alt+%' `
 	-BriefDescription ExpandAliases `
-	-LongDescription "Replace all aliases with the full command" `
+	-LongDescription 'Replace all aliases with the full command' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -617,7 +599,7 @@ Set-PSReadLineKeyHandler -Key "Alt+%" `
 # F1 for help on the command line - naturally
 Set-PSReadLineKeyHandler -Key F1 `
 	-BriefDescription CommandHelp `
-	-LongDescription "Open the help window for the current command" `
+	-LongDescription 'Open the help window for the current command' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -660,7 +642,7 @@ $global:PSReadLineMarks = @{}
 
 Set-PSReadLineKeyHandler -Key Ctrl+J `
 	-BriefDescription MarkDirectory `
-	-LongDescription "Mark the current directory" `
+	-LongDescription 'Mark the current directory' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -670,7 +652,7 @@ Set-PSReadLineKeyHandler -Key Ctrl+J `
 
 Set-PSReadLineKeyHandler -Key Ctrl+j `
 	-BriefDescription JumpDirectory `
-	-LongDescription "Goto the marked directory" `
+	-LongDescription 'Goto the marked directory' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -684,13 +666,13 @@ Set-PSReadLineKeyHandler -Key Ctrl+j `
 
 Set-PSReadLineKeyHandler -Key Alt+j `
 	-BriefDescription ShowDirectoryMarks `
-	-LongDescription "Show the currently marked directories" `
+	-LongDescription 'Show the currently marked directories' `
 	-ScriptBlock {
 	param($key, $arg)
 
 	$global:PSReadLineMarks.GetEnumerator() | ForEach-Object {
 		[PSCustomObject]@{Key = $_.Key; Dir = $_.Value } } |
-	Format-Table -AutoSize | Out-Host
+		Format-Table -AutoSize | Out-Host
 
 	[Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt()
 }
@@ -726,8 +708,7 @@ Set-PSReadLineKeyHandler -Key RightArrow `
 
 	if ($cursor -lt $line.Length) {
 		[Microsoft.PowerShell.PSConsoleReadLine]::ForwardChar($key, $arg)
-	}
- else {
+	} else {
 		[Microsoft.PowerShell.PSConsoleReadLine]::AcceptNextSuggestionWord($key, $arg)
 	}
 }
@@ -737,7 +718,7 @@ Set-PSReadLineKeyHandler -Key RightArrow `
 # on the command line.
 Set-PSReadLineKeyHandler -Key Alt+a `
 	-BriefDescription SelectCommandArguments `
-	-LongDescription "Set current selection to next command argument in the command line. Use of digit argument selects argument by position" `
+	-LongDescription 'Set current selection to next command argument in the command line. Use of digit argument selects argument by position' `
 	-ScriptBlock {
 	param($key, $arg)
 
@@ -760,8 +741,7 @@ Set-PSReadLineKeyHandler -Key Alt+a `
 
 	if ($null -ne $arg) {
 		$nextAst = $asts[$arg - 1]
-	}
-	else {
+	} else {
 		foreach ($ast in $asts) {
 			if ($ast.Extent.StartOffset -ge $cursor) {
 				$nextAst = $ast
@@ -791,7 +771,7 @@ Set-PSReadLineKeyHandler -Key Alt+a `
 # Allow you to type a Unicode code point, then pressing `Alt+x` to transform it into a Unicode char.
 Set-PSReadLineKeyHandler -Chord 'Alt+x' `
 	-BriefDescription ToUnicodeChar `
-	-LongDescription "Transform Unicode code point into a UTF-16 encoded string" `
+	-LongDescription 'Transform Unicode code point into a UTF-16 encoded string' `
 	-ScriptBlock {
 	$buffer = $null
 	$cursor = 0
@@ -813,8 +793,7 @@ Set-PSReadLineKeyHandler -Chord 'Alt+x' `
 
 	try {
 		$unicode = [char]::ConvertFromUtf32($number)
-	}
- catch {
+	} catch {
 		return
 	}
 
@@ -832,9 +811,9 @@ Set-PSReadLineKeyHandler -Chord Enter -Function ValidateAndAcceptLine
 $scriptblock = {
 	param($wordToComplete, $commandAst, $cursorPosition)
 	dotnet Complete --positioon $cursorPosition $commandAst.ToString() |
-	ForEach-Object {
-		[System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
-	}
+		ForEach-Object {
+			[System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+		}
 }
 Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock $scriptblock
 
@@ -880,16 +859,16 @@ function Edit-Profile {
 function Sync-Profile {
 	try {
 		# The dot operator is used to source the profile script.
-		. $profile
+		. $PROFILE
 		# Writes to the console to indicate that the profile has been reloaded successfully or not.
-
-		Write-Output "Profile reloaded successfully."
-	}
- catch {
+		Write-Output 'Profile reloaded successfully.'
+	} catch {
 		Write-Output "Failed to reload profile: $_"
+		Write-Error $_
 	}
 }
 
+# The function `unzip` is used to extract the contents of a zip file.
 function unzip ($file) {
 	try {
 		Write-Output("Extracting $file to $pwd")
@@ -903,7 +882,8 @@ function unzip ($file) {
 		Write-Output("Extraction completed successfully.")
 	}
  catch {
-		Write-Output("Failed to extract $file $_")
+		Write-Output "Failed to extract $file : $_"
+    Write-Error $_
 	}
 }
 function Clear-Cache {
