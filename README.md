@@ -1,3 +1,5 @@
-# My_Powershell_Profile
+# My PowerShell profile
 
-Here is my profile. I have listen, and watch YouTube videos from several arthurs about the various ways to add, and optimize working with PowerShell.
+Version 1.0
+
+This repository contains my PowerShell profile. I listened to and watched several YouTube videos and read articles by various authors about ways to add and optimize PowerShell functionality.
