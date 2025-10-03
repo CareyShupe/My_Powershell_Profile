@@ -49,9 +49,9 @@ function Update-Modules { $modules = @('PSScriptAnalyzer', 'Pester', 'PowerShell
 
   This function is ideal for automation workflows or profile scripts where keeping PowerShell current is essential. It’s modular, dry-run–aware, and designed with robust error handling and summary logic.
 
-'''powershell
+```powershell
 Update-PowerShell
-'''
+```
 
 Notes on ExecutionPolicy
 
