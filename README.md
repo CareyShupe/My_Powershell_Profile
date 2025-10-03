@@ -20,12 +20,22 @@ This is a personal PowerShell 7 profile that customizes the prompt, improves she
 if (Test-Path $PROFILE) { Copy-Item -Path $PROFILE -Destination "$PROFILE.bak" -Force }
 ```
 
-1. Install recommended modules (run as an elevated prompt only if you need system-wide install)
+How my PowerShell Profile works
+
+- Update-Modules function ensures your PowerShell environment has the latest versions of essential modules.
+- It checks whether each module is installed, outdated, or up to date and installs or updates as needed.
+
+## How It Works
+
+- Uses Find-Module to fetch the latest gallery versions.
+- Compares against locally installed versions.
+- Runs in parallel with a throttle limit of 3 for performance.
+- Provides clear feedback via Write-Warning, Write-Error, and Write-Host.
 
 ```powershell
-Install-Module -Name PSReadLine -Scope CurrentUser -Force
-Install-Module -Name posh-git -Scope CurrentUser -Force
-Install-Module -Name oh-my-posh -Scope CurrentUser -Force
+function Update-Modules { $modules = @('PSScriptAnalyzer', 'Pester', 'PowerShellGet', 'PackageManagement', 'Terminal-Icons', 'PSReadLine') $latestModules = Find-Module -Name $modules
+...
+}
 ```
 
 Notes on ExecutionPolicy
