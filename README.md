@@ -7,7 +7,7 @@ This is a personal PowerShell 7 profile that customizes the prompt, improves she
 ## Table of contents
 
 - Quickstart
-- Install (detailed)
+- How my PowerShell Profile works
 - What's in `profile.ps1`
 - Configuration & customization
 - PowerShell 7.x (pwsh)
@@ -20,12 +20,13 @@ This is a personal PowerShell 7 profile that customizes the prompt, improves she
 if (Test-Path $PROFILE) { Copy-Item -Path $PROFILE -Destination "$PROFILE.bak" -Force }
 ```
 
-How my PowerShell Profile works
+## How my PowerShell Profile works
 
-- Update-Modules function ensures your PowerShell environment has the latest versions of essential modules.
+- My profile is setup to check for module updates and check for the latest updates for powershell 7.
+- <u><b>Update-Modules</b></u> function ensures your PowerShell environment has the latest versions of essential modules.
 - It checks whether each module is installed, outdated, or up to date and installs or updates as needed.
 
-How It Works
+### How It Works
 
 - Uses Find-Module to fetch the latest gallery versions.
 - Compares against locally installed versions.
@@ -37,6 +38,20 @@ function Update-Modules { $modules = @('PSScriptAnalyzer', 'Pester', 'PowerShell
 ...
 }
 ```
+
+- <u><b>Update-PowerShell</b></u> function checks whether your current PowerShell version is up to date and upgrades it if necessary. <br> <h5>It performs the following steps:</h5>
+- Verifies connectivity to GitHub to fetch the latest release metadata.
+- Compares your installed PowerShell version againt the latest available.
+- Uses ShouldProcess logic to support dry-run scenarios and confirm high-impact changes.
+- Attempts to update PowerShell using the first available package manager from winget, choco, or scoop.
+- Gracefully handles errors and missing package manages, with clear feedback.
+- Outputs color-codes status messages for clarity and user experience.
+
+  This function is ideal for automation workflows or profile scripts where keeping PowerShell current is essential. It’s modular, dry-run–aware, and designed with robust error handling and summary logic.
+
+'''powershell
+Update-PowerShell
+'''
 
 Notes on ExecutionPolicy
 
