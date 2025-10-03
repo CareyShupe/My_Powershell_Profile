@@ -2,7 +2,7 @@
 
 Version: 1.0 • Status: Work in progress
 
-This is a personal PowerShell 7 profile that customizes the prompt, improves shell ergonomics, and configures useful modules such as PSReadLine, posh-git, and oh-my-posh. The repository contains a single entry point: `profile.ps1`, plus notes on installation, customization, and troubleshooting.
+This is a personal PowerShell 7 profile that customizes the prompt, improves shell ergonomics, and configures useful modules such as 'PSScriptAnalyzer', 'Pester', 'PowerShellGet', 'PackageManagement', 'Terminal-Icons', 'PSReadLine'. The repository contains a single entry point: `profile.ps1`, plus notes on installation, customization, and troubleshooting.
 
 ## Table of contents
 
@@ -10,7 +10,6 @@ This is a personal PowerShell 7 profile that customizes the prompt, improves she
 - Install (detailed)
 - What's in `profile.ps1`
 - Configuration & customization
-
 - PowerShell 7.x (pwsh)
 - Windows 10/11 supported; should work on macOS/Linux with minor path/module tweaks
 - Administrator privileges are not required for `-Scope CurrentUser` installs
