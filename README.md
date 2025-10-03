@@ -25,7 +25,7 @@ How my PowerShell Profile works
 - Update-Modules function ensures your PowerShell environment has the latest versions of essential modules.
 - It checks whether each module is installed, outdated, or up to date and installs or updates as needed.
 
-## How It Works
+How It Works
 
 - Uses Find-Module to fetch the latest gallery versions.
 - Compares against locally installed versions.
