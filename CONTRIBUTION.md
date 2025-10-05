@@ -1,53 +1,50 @@
 # Contributing to [My_Powershell_Profile]
 
-Thank you for your interest in contributing to [My_Powershell_Profile]! We welcome and appreciate all contributions, from reporting a bug to submitting a feature request or writing code.
+Thank you for your interest in contributing [My_Powershell_Profile]! The purpose of this repository is to store and share my personal functions, aliases, and settings. I welcome suggestions, bug fixes, and new features that might be helpful to others as well.
 
 Following these guidelines helps ensure a smooth experience for both contributors and project maintainers.
 
 ## How to contribute
 
+### Suggesting new features or improvements
+
+If you have an idea for a new function, alias, or setting, you can open an issue on the repository. Please use the "Feature Request" template and include the following:
+
+* **A clear title** that summarizes the suggestion.
+* **A detailed description** of what the feature does and why it would be useful.
+* **Any relevant code** if you have already written it.
+
 ### Reporting bugs
-We use GitHub Issues to track public bugs. Before creating a new issue, please check the existing issues to see if the bug has already been reported.
-A good bug report should be clear, concise, and contain all the information necessary for a maintainer to reproduce the bug.
 
-When you report a bug, please include the following information:
-*   A clear, descriptive title.
-*   The steps to reproduce the bug.
-*   The behavior you expected and the behavior you observed.
-*   Any relevant details about your environment, such as the operating system and project version.
+If you find a bug in any of the existing functions or settings, please open an issue. When reporting a bug, provide as much detail as possible:
 
-### Suggesting enhancements
-We welcome suggestions for new features and enhancements.
-*   **Before submitting a suggestion,** check the issue tracker to see if a similar idea has already been proposed.
-*   **When submitting a suggestion,** provide a detailed description of the proposed enhancement and explain why it would be useful.
+* **A clear and descriptive title** for the bug report.
+* **The steps to reproduce the issue.**
+* **What you expected to happen vs. what actually happened.**
+* **Relevant environment details,** such as your PowerShell version (`$PSVersionTable`).
 
-### Your first code contribution
-We are happy to guide you through your first contribution. The general workflow is as follows:
-1.  **Fork the repository** to your own GitHub account.
-2.  **Create a new branch** for your feature or bug fix.
-3.  **Make your changes**, following the project's [coding style guidelines](#style-guides).
-4.  **Create a pull request (PR)** with a clear title and description of your changes.
+### Submitting a pull request
 
-### Improving the documentation
-Documentation improvements are a great way to contribute. Feel free to fix typos, clarify confusing sections, or add new examples.
+For code contributions, such as bug fixes or new features, please follow these steps:
 
-## Style guides
+1. **Fork** the repository.
+2. **Create** a new branch (`git checkout -b feature-name`).
+3. **Implement** your changes.
+4. **Test** your changes to ensure they work as expected and don't introduce new problems.
+5. **Commit** your changes with a clear and descriptive commit message.
+6. **Push** your branch and create a new pull request.
+7. **Provide a clear description** of your changes in the pull request, including why they are needed.
 
-### Git commit messages
-*   Use the present tense ("Add feature" instead of "Added feature").
-*   Start with a capitalized letter.
-*   Limit the first line to 72 characters or less.
-*   Reference issues and pull requests by their number if applicable.
+### Style guidelines
 
-### Code style
-*   [Add a link here to your project's coding conventions, such as a style guide or linter configuration].
+To maintain consistency in the profile, please follow these conventions when contributing code:
 
-## Code of Conduct
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact opencode@microsoft.com with any additional questions or comments. By participating, you are expected to uphold this code..
+* **Use PascalCase** for functions and variable names to align with standard PowerShell practices.
+* **Use Approved Verbs** for function names.
+* **Use singular nouns** for function names.
+* **Comment your code** to explain complex logic or the purpose of a function.
+* **Adhere to the general PowerShell best practices** outlined in the official documentation.
 
-## Getting help
-If you have a question or need assistance, you can:
-*   Open an issue on the repository's [issue tracker]([Link to issue tracker]).
-*   Reach out to the project maintainers at [your email address or communication channel].
+## Acknowledgments
 
-Thanks for your contribution!
+I appreciate your help in making this a better resource for everyone. All contributors will be credited in this file or the main `README.md`.
