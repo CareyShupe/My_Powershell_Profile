@@ -239,12 +239,14 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\jandedobbeleer.omp.json" | 
 		MaximumHistoryCount           = 10000
 		BellStyle                     = "None"
 		AddToHistoryHandler           = {
-			param($line)
-			if ($line -match '^\s*#') {
-				return
-			}
-			$line
-		}
+    param($line)
+    # if the line is purely a comment, skip it
+    if ($line -match '^\s*#') {
+        return
+    }
+    # otherwise, return the line so it gets added
+    return $line
+}
 
 	}
 # Apply PSReadLine options, but guard against older PSReadLine versions that
