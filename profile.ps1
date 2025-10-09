@@ -227,6 +227,7 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\jandedobbeleer.omp.json" | 
 			Type                    = $PSStyle.Foreground.Blue
 			Variable                = $PSStyle.Foreground.Cyan
 		}
+		BracketedPasteMode            = 'Off'
 		PredictionSource              = "HistoryAndPlugin"
 		PredictionViewStyle           = "ListView"
 		EditMode                      = "Windows"
