@@ -236,7 +236,7 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\jandedobbeleer.omp.json" | 
 		ShowToolTips                  = $true
 
 		MaximumHistoryCount           = 10000
-		BellStyle                     = "None"
+		BellStyle                     = 'None'
 		AddToHistoryHandler           = {
 			param($line)
 			if ($line -match '^\s*#') {
